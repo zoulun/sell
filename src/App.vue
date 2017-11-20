@@ -14,24 +14,31 @@
         </li>
       </ul>
     </div>
-    <router-view :seller="seller"></router-view>
+    <router-view :seller="seller" keep-alive></router-view>
   </div>
 
 </template>
 
 <script type="text/ecmascript-6">
+import {urlParse} from 'common/js/util';
 import header from './components/header/header';
 export default {
   data() {
     return {
-      seller: {}
+      seller: {
+        id: (() => {
+          let queryParam = urlParse();
+          return queryParam.id;
+        })()
+      }
     };
   },
   created() {
-    this.$http.get('/api/seller').then((res) => {
+    this.$http.get(`/api/seller?id=${this.seller.id}`).then((res) => {
       res = res.body;
       if (res.errNo) {
-        this.seller = res.data;
+        this.seller = Object.assign({}, this.seller, res.data);
+        console.log(this.seller);
       }
     });
   },
