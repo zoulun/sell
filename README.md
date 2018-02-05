@@ -1,1 +1,2 @@
 # sell-p
+npm install
